@@ -4,13 +4,13 @@ def mse(expected, output):
 	assert expected.shape == output.shape
 	gradient = expected - output
 	loss = np.sum(np.power(expected - output, 2))
-	return (loss, gradient)
+	return (loss / expected.shape[0], gradient / expected.shape[0])
 
 def xentropy(expected, output):
 	assert expected.shape == output.shape
 	gradient = expected / output
 	loss = -np.sum(expected * np.log(output))
-	return (loss, gradient)
+	return (loss / expected.shape[0], gradient / expected.shape[0])
 
 class Model:
 	def __init__(self, layers, loss='mse'):

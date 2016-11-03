@@ -22,9 +22,9 @@ class ReLU:
 		return self._relu(y)
 
 	def backpropagate(self, grad):
-		ngrad = np.zeros((self.input_dims))
+		ngrad = []
 		for i, x_i in enumerate(self.data):
 			partial = grad[i] * self._grad_relu(np.dot(self.weight, x_i))
 			self.weight += 1e-3 * np.outer(partial, x_i)
-			ngrad += np.dot(partial, self.weight)
-		return ngrad
+			ngrad.append(np.dot(partial, self.weight))
+		return np.array(ngrad)

@@ -9,15 +9,13 @@ class Softmax:
 	def _softmax(self, y):
 		result = []
 		for i, y_i in enumerate(y):
-			e_y_i = np.exp(y_i)
+			e_y_i = np.exp(y_i - np.max(y_i))
 			result.append(e_y_i / np.sum(e_y_i))
 		return np.array(result)
 
 	def _grad_softmax(self, y):
 		# TODO: Actually compute the gradient...
 		def approx(y_i):
-			if 0.33 < y_i < 0.66:
-				return 1.0
 			return 0.1
 		approx = np.vectorize(approx)
 		return approx(y)
@@ -32,9 +30,9 @@ class Softmax:
 		return self._softmax(y)
 
 	def backpropagate(self, grad):
-		ngrad = np.zeros((self.input_dims))
+		ngrad = []
 		for i, x_i in enumerate(self.data):
 			partial = grad[i] * self._grad_softmax(np.dot(self.weight, x_i))
 			self.weight += np.outer(partial, x_i)
-			ngrad += np.dot(partial, self.weight)
-		return ngrad
+			ngrad.append(np.dot(partial, self.weight))
+		return np.array(ngrad)
